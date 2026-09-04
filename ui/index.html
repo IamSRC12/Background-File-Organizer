@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sortify – Background File Organizer</title>
+  <meta name="description" content="Sortify automatically organizes and routes your files in real time with custom rules, templates, and background monitoring.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-container">
+
+    <!-- ── Sidebar ─────────────────────────────────────────── -->
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <i class="fa-solid fa-folder-tree"></i>
+        </div>
+        <div class="brand-text">
+          <h1>Sortify</h1>
+          <span>Background Organizer</span>
+        </div>
+      </div>
+
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active" data-tab="tab-dashboard" id="nav-dashboard">
+          <i class="fa-solid fa-chart-line"></i>
+          <span>Dashboard</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="tab-rules" id="nav-rules">
+          <i class="fa-solid fa-sliders"></i>
+          <span>Folder Rules</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="tab-customization" id="nav-customization">
+          <i class="fa-solid fa-layer-group"></i>
+          <span>Organizing Options</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="tab-simulator" id="nav-simulator">
+          <i class="fa-solid fa-flask-vial"></i>
+          <span>Rule Simulator</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="tab-settings" id="nav-settings">
+          <i class="fa-solid fa-gear"></i>
+          <span>Settings</span>
+        </a>
+        <a href="#" class="nav-item" data-tab="tab-logs" id="nav-logs">
+          <i class="fa-solid fa-receipt"></i>
+          <span>Activity Logs</span>
+        </a>
+      </nav>
+
+      <div class="status-widget">
+        <div class="status-indicator-container">
+          <span class="status-dot online" id="status-dot"></span>
+          <span class="status-text" id="status-text">Organizer Active</span>
+        </div>
+        <button class="status-toggle-btn btn-secondary" id="btn-toggle-service">
+          <i class="fa-solid fa-pause"></i> Pause Service
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── Main Content ──────────────────────────────────────── -->
+    <main class="main-content">
+
+      <!-- ══ DASHBOARD TAB ══════════════════════════════════════ -->
+      <section class="tab-content active" id="tab-dashboard">
+        <header class="content-header">
+          <h2>Dashboard</h2>
+          <p>Real-time file organization analytics, live feed, and quick control.</p>
+        </header>
+
+        <!-- Stats Grid (4 Cards) -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon purple-gradient">
+              <i class="fa-solid fa-bolt"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Files Organized</h3>
+              <p class="stat-value" id="stat-files-count">0</p>
+              <span class="stat-desc">Total successful moves</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon blue-gradient">
+              <i class="fa-solid fa-hard-drive"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Monitored Folders</h3>
+              <p class="stat-value" id="stat-folders-count">0</p>
+              <span class="stat-desc path-value" id="stat-watch-path">Loading...</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon teal-gradient">
+              <i class="fa-solid fa-shapes"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Active Categories</h3>
+              <p class="stat-value" id="stat-categories-count">0</p>
+              <span class="stat-desc" id="stat-exts-count">0 total extensions</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon orange-gradient">
+              <i class="fa-solid fa-clock-rotate-left"></i>
+            </div>
+            <div class="stat-info">
+              <h3>Last Action</h3>
+              <p class="stat-value" style="font-size: 15px; font-weight:600;" id="stat-last-action">Idle</p>
+              <span class="stat-desc" id="stat-last-time">Awaiting files</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Category Distribution Progress Bar -->
+        <div class="distribution-card">
+          <div class="distribution-header">
+            <h3><i class="fa-solid fa-chart-pie"></i> Category Distribution Breakdown</h3>
+            <span id="dist-total-label">0 files recorded</span>
+          </div>
+          <div class="dist-bar-track" id="dist-bar-track">
+            <!-- Segments injected by JS -->
+          </div>
+          <div class="dist-legend-grid" id="dist-legend-grid">
+            <!-- Legend items injected by JS -->
+          </div>
+        </div>
+
+        <!-- Live Activity + Quick Actions -->
+        <div class="dashboard-split-grid">
+          <div class="card live-logs-card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-wave-square"></i> Real-time Activity Feed</h3>
+              <span class="pulse-badge"><span class="badge-dot"></span> LIVE</span>
+            </div>
+            <div class="card-body">
+              <div class="live-log-container" id="dashboard-recent-logs">
+                <div class="empty-state">
+                  <i class="fa-solid fa-magnifying-glass"></i>
+                  <p>No recent file operations yet.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card quick-actions-card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-wand-magic-sparkles"></i> Quick Actions</h3>
+            </div>
+            <div class="card-body quick-actions-body">
+              <button class="action-btn" id="btn-manual-scan-dash">
+                <div class="action-icon teal-gradient">
+                  <i class="fa-solid fa-arrows-rotate"></i>
+                </div>
+                <div class="action-info">
+                  <h4>Organize Existing Files</h4>
+                  <p>Scan and sort files in all monitored folders.</p>
+                </div>
+              </button>
+
+              <button class="action-btn" id="btn-undo-last-dash">
+                <div class="action-icon purple-gradient">
+                  <i class="fa-solid fa-rotate-left"></i>
+                </div>
+                <div class="action-info">
+                  <h4>Undo Last Move</h4>
+                  <p>Restore the most recently moved file to original folder.</p>
+                </div>
+              </button>
+
+              <button class="action-btn" id="btn-open-watch-folder">
+                <div class="action-icon orange-gradient">
+                  <i class="fa-regular fa-folder-open"></i>
+                </div>
+                <div class="action-info">
+                  <h4>Open Monitored Folder</h4>
+                  <p>Browse the first monitored folder in Explorer.</p>
+                </div>
+              </button>
+
+              <button class="action-btn" id="btn-open-tracker">
+                <div class="action-icon green-gradient">
+                  <i class="fa-solid fa-file-lines"></i>
+                </div>
+                <div class="action-info">
+                  <h4>Open Tracker Log</h4>
+                  <p>View "background organizer.txt" in Documents.</p>
+                </div>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ FOLDER RULES TAB ══════════════════════════════════ -->
+      <section class="tab-content" id="tab-rules">
+        <header class="content-header logs-header-container">
+          <div>
+            <h2>Folder Rules &amp; Categories</h2>
+            <p>Customize file extension mappings or create new categories with custom colors and icons.</p>
+          </div>
+          <div class="rules-header-actions">
+            <button class="btn-primary" id="btn-open-create-category">
+              <i class="fa-solid fa-plus"></i> New Category
+            </button>
+          </div>
+        </header>
+
+        <div class="rules-container">
+          <div class="category-cards-grid" id="category-cards-container">
+            <div class="loading-state">
+              <i class="fa-solid fa-spinner fa-spin"></i> Loading categories...
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ ORGANIZING OPTIONS TAB ════════════════════════════ -->
+      <section class="tab-content" id="tab-customization">
+        <header class="content-header">
+          <h2>Organizing Customization &amp; Hierarchy</h2>
+          <p>Configure folder templates, dedicated destination folders, file filters, and renaming patterns.</p>
+        </header>
+
+        <div class="settings-form">
+          <div class="card settings-card">
+            <div class="card-body">
+
+              <!-- ── Target Destination Mode ──────────────────────── -->
+              <div class="settings-group">
+                <div class="settings-label">
+                  <label>Organization Destination</label>
+                  <span>Choose whether to organize inside monitored folders or move files into a dedicated target folder.</span>
+                </div>
+                <div class="toggle-group-buttons">
+                  <input type="radio" id="target-inplace" name="opt-target-mode" value="in-place" checked>
+                  <label for="target-inplace" class="btn-toggle-option">In-Place (Within Monitored Folder)</label>
+                  <input type="radio" id="target-custom" name="opt-target-mode" value="custom-folder">
+                  <label for="target-custom" class="btn-toggle-option">Dedicated Target Folder</label>
+                </div>
+
+                <div id="custom-target-row" style="display:none; margin-top: 10px;">
+                  <div class="add-folder-row" style="display:flex; gap:10px; align-items:center;">
+                    <input type="text" class="input-field" id="input-custom-target-path" placeholder="e.g. D:\Organized Files" style="flex-grow:1;" readonly>
+                    <button class="btn-secondary" id="btn-select-target-folder">
+                      <i class="fa-solid fa-folder-open"></i> Browse Folder
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── Folder Hierarchy Template ───────────────────── -->
+              <div class="settings-group">
+                <div class="settings-label">
+                  <label>Folder Structure Template</label>
+                  <span>Select how subfolders are structured when organizing files.</span>
+                </div>
+
+                <div class="template-grid">
+                  <label class="template-option">
+                    <input type="radio" name="opt-template" value="standard" checked>
+                    <div class="template-card">
+                      <h4>Standard Template</h4>
+                      <p><code>[Date] / [Category] / [ext] / file</code></p>
+                    </div>
+                  </label>
+
+                  <label class="template-option">
+                    <input type="radio" name="opt-template" value="clean">
+                    <div class="template-card">
+                      <h4>Clean Category</h4>
+                      <p><code>[Category] / file</code></p>
+                    </div>
+                  </label>
+
+                  <label class="template-option">
+                    <input type="radio" name="opt-template" value="category-ext">
+                    <div class="template-card">
+                      <h4>Category + Extension</h4>
+                      <p><code>[Category] / [ext] / file</code></p>
+                    </div>
+                  </label>
+
+                  <label class="template-option">
+                    <input type="radio" name="opt-template" value="date-category">
+                    <div class="template-card">
+                      <h4>Date + Category</h4>
+                      <p><code>[Date] / [Category] / file</code></p>
+                    </div>
+                  </label>
+
+                  <label class="template-option">
+                    <input type="radio" name="opt-template" value="year-month-category">
+                    <div class="template-card">
+                      <h4>Year / Month / Category</h4>
+                      <p><code>[YYYY] / [Month] / [Category] / file</code></p>
+                    </div>
+                  </label>
+
+                  <label class="template-option">
+                    <input type="radio" name="opt-template" value="custom">
+                    <div class="template-card">
+                      <h4>Custom Pattern</h4>
+                      <p><code>Define your own tokens</code></p>
+                    </div>
+                  </label>
+                </div>
+
+                <div id="custom-template-input-row" style="display:none; margin-top: 10px;">
+                  <div class="input-field-group">
+                    <label>Custom Pattern Tokens: <code>{category}</code>, <code>{ext}</code>, <code>{date}</code>, <code>{year}</code>, <code>{month}</code>, <code>{monthname}</code>, <code>{day}</code></label>
+                    <input type="text" class="input-field" id="input-custom-template-string" placeholder="{category}/{ext}">
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── Date Formatting Options ──────────────────────── -->
+              <div class="settings-group">
+                <div class="settings-label">
+                  <label>Date Format &amp; Source</label>
+                  <span>Format for date-based subfolders and whether to use current date or file creation date.</span>
+                </div>
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                  <div class="input-field-group">
+                    <label>Date Format</label>
+                    <select class="input-field" id="select-date-format">
+                      <option value="DD MMMM YYYY">31 August 2026 (DD MMMM YYYY)</option>
+                      <option value="YYYY-MM-DD">2026-08-31 (YYYY-MM-DD)</option>
+                      <option value="DD-MM-YYYY">31-08-2026 (DD-MM-YYYY)</option>
+                      <option value="YYYY/MM">2026/08 (YYYY/MM)</option>
+                      <option value="Month YYYY">August 2026 (Month YYYY)</option>
+                    </select>
+                  </div>
+
+                  <div class="input-field-group">
+                    <label>Date Source</label>
+                    <select class="input-field" id="select-date-source">
+                      <option value="current">Current Date (When Organized)</option>
+                      <option value="fileDate">File Created / Modified Date</option>
+                    </select>
+                  </div>
+                </div>
+              </div>
+
+              <!-- ── Duplicate Handling ──────────────────────────── -->
+              <div class="settings-group">
+                <div class="settings-label">
+                  <label>Duplicate Handling</label>
+                  <span>What to do when a file with the same name already exists in the destination folder.</span>
+                </div>
+                <div class="toggle-group-buttons">
+                  <input type="radio" id="dup-rename" name="opt-dup-handling" value="rename" checked>
+                  <label for="dup-rename" class="btn-toggle-option">Auto Rename (file(1).ext)</label>
+                  <input type="radio" id="dup-skip" name="opt-dup-handling" value="skip">
+                  <label for="dup-skip" class="btn-toggle-option">Skip File</label>
+                  <input type="radio" id="dup-overwrite" name="opt-dup-handling" value="overwrite">
+                  <label for="dup-overwrite" class="btn-toggle-option">Overwrite</label>
+                  <input type="radio" id="dup-smart" name="opt-dup-handling" value="smart-match">
+                  <label for="dup-smart" class="btn-toggle-option">Smart Match</label>
+                </div>
+              </div>
+
+              <!-- ── File Filters & Exclusions ───────────────────── -->
+              <div class="settings-group">
+                <div class="settings-label">
+                  <label>File Filters &amp; Exclusions</label>
+                  <span>Exclude specific extensions, wildcard patterns, or files outside size boundaries.</span>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+                  <div class="input-field-group">
+                    <label>Min File Size (KB) [0 = No Min]</label>
+                    <input type="number" class="input-field" id="input-min-size" min="0" value="0">
+                  </div>
+                  <div class="input-field-group">
+                    <label>Max File Size (MB) [0 = No Max]</label>
+                    <input type="number" class="input-field" id="input-max-size" min="0" value="0">
+                  </div>
+                </div>
+
+                <div class="input-field-group" style="margin-top:10px;">
+                  <label>Excluded File Patterns (comma separated, e.g. <code>~$*, temp_*, .git*</code>)</label>
+                  <input type="text" class="input-field" id="input-excluded-patterns" placeholder="~$*, temp_*, .*">
+                </div>
+              </div>
+
+              <!-- ── File Name Formatting Options ────────────────── -->
+              <div class="settings-group toggle-row">
+                <div class="settings-label">
+                  <label for="toggle-clean-names">Sanitize File Names</label>
+                  <span>Replace spaces and special characters with underscores (e.g. <code>my file (2).pdf</code> → <code>my_file_2.pdf</code>).</span>
+                </div>
+                <div class="switch">
+                  <input type="checkbox" id="toggle-clean-names">
+                  <span class="slider"></span>
+                </div>
+              </div>
+
+              <div class="settings-group toggle-row">
+                <div class="settings-label">
+                  <label for="toggle-lowercase-ext">Lowercase Extensions</label>
+                  <span>Normalize all extensions to lowercase (e.g. <code>.JPG</code> → <code>.jpg</code>).</span>
+                </div>
+                <div class="switch">
+                  <input type="checkbox" id="toggle-lowercase-ext" checked>
+                  <span class="slider"></span>
+                </div>
+              </div>
+
+              <div class="settings-group toggle-row">
+                <div class="settings-label">
+                  <label for="toggle-date-prefix">Prepend Date Prefix</label>
+                  <span>Add date prefix to file names (e.g. <code>2026-08-31_filename.pdf</code>).</span>
+                </div>
+                <div class="switch">
+                  <input type="checkbox" id="toggle-date-prefix">
+                  <span class="slider"></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button class="btn-primary btn-large" id="btn-save-customization">
+              <i class="fa-solid fa-floppy-disk"></i> Save Organizing Options
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ RULE SIMULATOR TAB ═════════════════════════════════ -->
+      <section class="tab-content" id="tab-simulator">
+        <header class="content-header">
+          <h2>Rule Simulator &amp; Live Preview</h2>
+          <p>Test any file name to immediately verify which category matches and preview its exact destination path.</p>
+        </header>
+
+        <div class="simulator-container">
+          <div class="card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-vial"></i> Test Input</h3>
+            </div>
+            <div class="card-body simulator-input-panel">
+              <div class="input-field-group">
+                <label>Test Filename</label>
+                <input type="text" class="input-field" id="sim-input-filename" placeholder="e.g. quarterly_report_2026.pdf, song.flac, movie.mkv" value="quarterly_report_2026.pdf">
+              </div>
+
+              <div class="input-field-group">
+                <label>Test Source Folder</label>
+                <input type="text" class="input-field" id="sim-input-folder" placeholder="C:\Users\Downloads" readonly>
+              </div>
+
+              <button class="btn-primary" id="btn-run-simulation" style="margin-top: 10px;">
+                <i class="fa-solid fa-play"></i> Simulate Path
+              </button>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3><i class="fa-solid fa-wand-magic"></i> Simulated Output Preview</h3>
+            </div>
+            <div class="card-body">
+              <div class="simulator-result-box" id="sim-result-box">
+                <div class="sim-result-row">
+                  <span class="sim-result-label">Detected Category:</span>
+                  <span class="sim-result-value" id="sim-category-badge">
+                    <span class="log-status-badge info">Documents</span>
+                  </span>
+                </div>
+
+                <div class="sim-result-row">
+                  <span class="sim-result-label">Detected Extension:</span>
+                  <span class="sim-result-value" id="sim-ext-badge">.pdf</span>
+                </div>
+
+                <div class="sim-result-row">
+                  <span class="sim-result-label">Target File Name:</span>
+                  <span class="sim-result-value" id="sim-target-filename">quarterly_report_2026.pdf</span>
+                </div>
+
+                <div class="input-field-group">
+                  <label>Full Destination Path:</label>
+                  <div class="sim-path-display" id="sim-full-path">
+                    C:\Users\Downloads\31 August 2026\Documents\pdf\quarterly_report_2026.pdf
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ SETTINGS TAB ══════════════════════════════════════ -->
+      <section class="tab-content" id="tab-settings">
+        <header class="content-header">
+          <h2>Application Settings</h2>
+          <p>Manage monitored folders, background stability delays, and system startup behavior.</p>
+        </header>
+
+        <div class="settings-form">
+          <div class="card settings-card">
+            <div class="card-body">
+
+              <!-- ── Monitored Folders ──────────────────────── -->
+              <div class="settings-group">
+                <div class="settings-label">
+                  <label>Monitored Folders</label>
+                  <span>Sortify watches all folders below and organizes new files in real time. Drive roots (C:\, A:\) are always guarded.</span>
+                </div>
+
+                <div class="watch-folders-list" id="watch-folders-list">
+                  <!-- Populated by renderer.js -->
+                </div>
+
+                <div class="add-folder-row">
+                  <button class="btn-primary" id="btn-add-watch-folder">
+                    <i class="fa-solid fa-folder-plus"></i> Add Monitored Folder
+                  </button>
+                </div>
+              </div>
+
+              <!-- ── Stability Delay ────────────────────────── -->
+              <div class="settings-group">
+                <div class="settings-label">
+                  <label>Download Stability Delay (Seconds)</label>
+                  <span>Time to wait after a new file is detected before moving it, ensuring browser downloads finish writing.</span>
+                </div>
+                <div style="max-width: 200px;">
+                  <input type="number" class="input-field" id="input-stability-delay" min="1" max="30" value="2">
+                </div>
+              </div>
+
+              <!-- ── Run on Startup ─────────────────────────── -->
+              <div class="settings-group toggle-row">
+                <div class="settings-label">
+                  <label for="toggle-startup">Run on System Startup</label>
+                  <span>Auto-launch Sortify minimized in the system tray when Windows boots.</span>
+                </div>
+                <div class="switch">
+                  <input type="checkbox" id="toggle-startup" checked>
+                  <span class="slider"></span>
+                </div>
+              </div>
+
+              <!-- ── Organize on Launch ────────────────────── -->
+              <div class="settings-group toggle-row">
+                <div class="settings-label">
+                  <label for="toggle-organize-on-launch">Organize Existing Files on Launch</label>
+                  <span>Automatically scan and sort all monitored folders when Sortify starts.</span>
+                </div>
+                <div class="switch">
+                  <input type="checkbox" id="toggle-organize-on-launch" checked>
+                  <span class="slider"></span>
+                </div>
+              </div>
+
+              <!-- ── Desktop Notifications ─────────────────── -->
+              <div class="settings-group toggle-row">
+                <div class="settings-label">
+                  <label for="toggle-notifications">Desktop Notifications</label>
+                  <span>Show Windows toast notifications when files are organized.</span>
+                </div>
+                <div class="switch">
+                  <input type="checkbox" id="toggle-notifications" checked>
+                  <span class="slider"></span>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          <div class="settings-actions">
+            <button class="btn-primary btn-large" id="btn-save-settings">
+              <i class="fa-solid fa-floppy-disk"></i> Save Settings
+            </button>
+            <button class="btn-secondary btn-large" id="btn-manual-scan-settings">
+              <i class="fa-solid fa-arrows-rotate"></i> Organize Existing Files Now
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ══ ACTIVITY LOGS TAB ════════════════════════════════ -->
+      <section class="tab-content" id="tab-logs">
+        <header class="content-header logs-header-container">
+          <div>
+            <h2>Activity Logs &amp; Rollback</h2>
+            <p>Full history of organized files with instant undo restoration and export options.</p>
+          </div>
+          <div class="logs-header-actions">
+            <button class="btn-secondary" id="btn-export-csv" title="Export as CSV">
+              <i class="fa-solid fa-file-csv"></i> Export CSV
+            </button>
+            <button class="btn-secondary" id="btn-export-json" title="Export as JSON">
+              <i class="fa-solid fa-code"></i> Export JSON
+            </button>
+            <button class="btn-secondary btn-danger-hover" id="btn-clear-logs">
+              <i class="fa-solid fa-trash-can"></i> Clear Logs
+            </button>
+          </div>
+        </header>
+
+        <div class="log-toolbar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" placeholder="Search file name, type, or path..." id="input-log-search">
+          </div>
+          <div class="filter-badges">
+            <button class="filter-badge active" data-filter="all">All</button>
+            <button class="filter-badge" data-filter="success">Success</button>
+            <button class="filter-badge" data-filter="info">Info</button>
+            <button class="filter-badge" data-filter="error">Error</button>
+          </div>
+        </div>
+
+        <div class="card table-card">
+          <div class="table-container">
+            <table class="logs-table">
+              <thead>
+                <tr>
+                  <th>Timestamp</th>
+                  <th>Status</th>
+                  <th>Activity Description</th>
+                  <th style="text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="logs-table-body">
+                <tr class="empty-row">
+                  <td colspan="4">
+                    <div class="empty-state">
+                      <i class="fa-solid fa-clipboard-list"></i>
+                      <p>Activity log is empty.</p>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ── Create Custom Category Modal ──────────────────────── -->
+  <div class="modal-backdrop" id="modal-create-category">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <h3><i class="fa-solid fa-folder-plus"></i> Create Custom Category</h3>
+        <button class="modal-close-btn" id="btn-close-cat-modal">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="input-field-group">
+          <label>Category Name</label>
+          <input type="text" class="input-field" id="modal-input-cat-name" placeholder="e.g. Torrents, 3DModels, Books">
+        </div>
+
+        <div class="input-field-group">
+          <label>Category Icon</label>
+          <div class="icon-picker-grid" id="modal-icon-picker">
+            <div class="icon-option selected" data-icon="fa-folder"><i class="fa-solid fa-folder"></i></div>
+            <div class="icon-option" data-icon="fa-film"><i class="fa-solid fa-film"></i></div>
+            <div class="icon-option" data-icon="fa-book"><i class="fa-solid fa-book"></i></div>
+            <div class="icon-option" data-icon="fa-code"><i class="fa-solid fa-code"></i></div>
+            <div class="icon-option" data-icon="fa-cube"><i class="fa-solid fa-cube"></i></div>
+            <div class="icon-option" data-icon="fa-gamepad"><i class="fa-solid fa-gamepad"></i></div>
+            <div class="icon-option" data-icon="fa-database"><i class="fa-solid fa-database"></i></div>
+            <div class="icon-option" data-icon="fa-camera"><i class="fa-solid fa-camera"></i></div>
+            <div class="icon-option" data-icon="fa-headphones"><i class="fa-solid fa-headphones"></i></div>
+            <div class="icon-option" data-icon="fa-download"><i class="fa-solid fa-download"></i></div>
+          </div>
+        </div>
+
+        <div class="input-field-group">
+          <label>Color Theme</label>
+          <div class="color-picker-grid" id="modal-color-picker">
+            <div class="color-option primary-gradient selected" data-color="primary-gradient"></div>
+            <div class="color-option purple-gradient" data-color="purple-gradient"></div>
+            <div class="color-option blue-gradient" data-color="blue-gradient"></div>
+            <div class="color-option teal-gradient" data-color="teal-gradient"></div>
+            <div class="color-option orange-gradient" data-color="orange-gradient"></div>
+            <div class="color-option green-gradient" data-color="green-gradient"></div>
+            <div class="color-option yellow-gradient" data-color="yellow-gradient"></div>
+            <div class="color-option indigo-gradient" data-color="indigo-gradient"></div>
+            <div class="color-option rose-gradient" data-color="rose-gradient"></div>
+            <div class="color-option slate-gradient" data-color="slate-gradient"></div>
+          </div>
+        </div>
+
+        <div class="input-field-group">
+          <label>File Extensions (comma separated, e.g. <code>.torrent, .magnet</code>)</label>
+          <input type="text" class="input-field" id="modal-input-cat-exts" placeholder=".torrent, .magnet">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" id="btn-cancel-cat-modal">Cancel</button>
+        <button class="btn-primary" id="btn-save-new-category">Create Category</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>

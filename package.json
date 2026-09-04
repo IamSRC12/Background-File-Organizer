@@ -1,0 +1,40 @@
+{
+  "name": "background-file-organizer",
+  "version": "1.0.0",
+  "description": "Background file organizer that automatically categorizes downloaded files by type and date.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron .",
+    "dist": "electron-builder"
+  },
+  "dependencies": {
+    "chokidar": "^3.6.0",
+    "fs-extra": "^11.2.0",
+    "node-notifier": "^10.0.1"
+  },
+  "devDependencies": {
+    "electron": "^30.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.sortify.fileorganizer",
+    "productName": "Sortify",
+    "win": {
+      "target": ["nsis", "portable"],
+      "icon": "assets/icon.png"
+    },
+    "nsis": {
+      "oneClick": true,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": false,
+      "runAfterFinish": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "Sortify File Organizer"
+    },
+    "directories": {
+      "output": "dist"
+    }
+  }
+}

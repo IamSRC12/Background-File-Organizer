@@ -1,0 +1,23 @@
+Last updated: 2026-08-14T14:27:19
+
+Files (14):
+  README.md
+  change_log.txt
+  code.txt
+  code_history_log.txt
+  main.js
+  package-lock.json
+  package.json
+  settings.js
+  test-organizer.js
+  test2.txt
+  test_log.js
+  testfile.txt
+  watcher_test.txt
+  watcher_test2.js
+
+Subdirectories (4):
+  assets
+  dist
+  node_modules
+  ui
