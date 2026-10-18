@@ -17,6 +17,13 @@
 
 **Sortify** is a silent background watcher that automatically categorizes and moves downloads and desktop files by extension. Built as an Electron desktop app.
 
+## 📥 Download
+
+Grab the latest Windows build from the [**Releases**](https://github.com/IamSRC12/Background-File-Organizer/releases) page:
+
+- **Sortify Setup 1.0.0.exe** — installer (Start Menu / desktop shortcuts)
+- **Sortify 1.0.0.exe** — portable, no install
+
 ## ✨ Features
 
 - Watches folders in real time and sorts files by extension into categories
