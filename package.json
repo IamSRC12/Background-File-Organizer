@@ -2,6 +2,7 @@
   "name": "background-file-organizer",
   "version": "1.0.0",
   "description": "Background file organizer that automatically categorizes downloaded files by type and date.",
+  "author": "Shlok Chandak (https://github.com/IamSRC12)",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
