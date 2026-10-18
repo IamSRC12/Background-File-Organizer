@@ -27,6 +27,7 @@
   --primary: #5e6ad2;
   --primary-hover: #828fff;
   --primary-focus: #5e69d1;
+  --on-primary: #ffffff;
 
   /* Semantic */
   --color-success: #27a644;
@@ -73,6 +74,31 @@
 .rose-gradient    { background: #d35fa0; color: #fff; }
 .slate-gradient   { background: #6b7280; color: #fff; }
 
+/* ─── Golden light theme ──────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --canvas: #fbf7ed;
+  --surface-1: #ffffff;
+  --surface-2: #f6efdd;
+  --surface-3: #eee4cd;
+  --surface-4: #e8ddc4;
+  --hairline: #e7dcc3;
+  --hairline-strong: #d6c69f;
+  --hairline-tertiary: #c9b98f;
+  --ink: #241d10;
+  --ink-muted: #4f4632;
+  --ink-subtle: #8a7c5f;
+  --ink-tertiary: #a89a7c;
+  --primary: #b8860b;
+  --primary-hover: #9c7209;
+  --primary-focus: #c99a2e;
+  --on-primary: #fffdf5;
+  --color-success: #2e7d32;
+  --color-info: #b8860b;
+  --color-warning: #b8860b;
+  --color-error: #c0392b;
+  --text-dark: #fffdf5;
+}
+
 /* Global Reset */
 * {
   box-sizing: border-box;
@@ -88,6 +114,7 @@ body {
   overflow: hidden;
   user-select: none;
   -webkit-font-smoothing: antialiased;
+  transition: background-color var(--transition-fast), color var(--transition-fast);
 }
 
 /* Scrollbars */
@@ -142,7 +169,7 @@ body {
   align-items: center;
   justify-content: center;
   font-size: 15px;
-  color: #fff;
+  color: var(--on-primary);
 }
 
 .brand-text h1 {
@@ -201,6 +228,32 @@ body {
 .nav-item.active i {
   color: var(--primary-hover);
 }
+
+/* Theme toggle */
+.theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  border: 1px solid var(--hairline);
+  background: var(--surface-1);
+  color: var(--ink-subtle);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast), background var(--transition-fast);
+}
+
+.theme-toggle:hover {
+  border-color: var(--hairline-strong);
+  color: var(--ink);
+}
+
+.theme-toggle i { font-size: 13px; }
 
 /* Sidebar Status Widget */
 .status-widget {
@@ -631,7 +684,7 @@ body {
 /* ─── Buttons & Controls ──────────────────────────────────────────────────── */
 .btn-primary {
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary);
   font-weight: 500;
   padding: 8px 14px;
   border-radius: 8px;
@@ -876,7 +929,7 @@ body {
 .btn-add-tag:hover {
   background: var(--primary);
   border-color: transparent;
-  color: #fff;
+  color: var(--on-primary);
 }
 
 /* ─── Settings Tab ────────────────────────────────────────────────────────── */
@@ -1277,19 +1330,7 @@ input:checked + .slider:before {
   color: var(--ink);
 }
 
-/* ─── Simulator & Sandbox Tab ─────────────────────────────────────────────── */
-.simulator-container {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 16px;
-}
-
-.simulator-input-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
+/* ─── Form fields ─────────────────────────────────────────────────────────── */
 .input-field-group {
   display: flex;
   flex-direction: column;
@@ -1316,43 +1357,6 @@ input:checked + .slider:before {
 .input-field:focus {
   border-color: var(--primary-focus);
   box-shadow: 0 0 0 2px rgba(94, 105, 209, 0.5);
-}
-
-.simulator-result-box {
-  background: var(--surface-2);
-  border: 1px solid var(--hairline);
-  border-radius: 10px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-
-.sim-result-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 12.5px;
-}
-
-.sim-result-label {
-  color: var(--ink-subtle);
-}
-
-.sim-result-value {
-  font-weight: 500;
-  color: var(--ink);
-}
-
-.sim-path-display {
-  background: var(--surface-3);
-  border: 1px solid var(--hairline);
-  border-radius: 8px;
-  padding: 10px 12px;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: var(--ink-muted);
-  word-break: break-all;
 }
 
 /* ─── Modal Dialog ────────────────────────────────────────────────────────── */
@@ -1478,7 +1482,7 @@ input:checked + .slider:before {
 
 .icon-option.selected {
   background: var(--primary);
-  color: #fff;
+  color: var(--on-primary);
   border-color: transparent;
 }
 

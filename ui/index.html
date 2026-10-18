@@ -10,6 +10,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link rel="stylesheet" href="style.css">
+  <script>
+    try { document.documentElement.dataset.theme = localStorage.getItem('sortify-theme') || 'dark'; } catch (e) {}
+  </script>
 </head>
 <body>
   <div class="app-container">
@@ -39,10 +42,6 @@
           <i class="fa-solid fa-layer-group"></i>
           <span>Organizing Options</span>
         </a>
-        <a href="#" class="nav-item" data-tab="tab-simulator" id="nav-simulator">
-          <i class="fa-solid fa-flask-vial"></i>
-          <span>Rule Simulator</span>
-        </a>
         <a href="#" class="nav-item" data-tab="tab-settings" id="nav-settings">
           <i class="fa-solid fa-gear"></i>
           <span>Settings</span>
@@ -52,6 +51,11 @@
           <span>Activity Logs</span>
         </a>
       </nav>
+
+      <button class="theme-toggle" id="btn-theme-toggle" type="button" title="Toggle light / dark theme">
+        <i class="fa-solid fa-moon"></i>
+        <span>Light theme</span>
+      </button>
 
       <div class="status-widget">
         <div class="status-indicator-container">
@@ -434,70 +438,6 @@
             <button class="btn-primary btn-large" id="btn-save-customization">
               <i class="fa-solid fa-floppy-disk"></i> Save Organizing Options
             </button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ══ RULE SIMULATOR TAB ═════════════════════════════════ -->
-      <section class="tab-content" id="tab-simulator">
-        <header class="content-header">
-          <h2>Rule Simulator &amp; Live Preview</h2>
-          <p>Test any file name to immediately verify which category matches and preview its exact destination path.</p>
-        </header>
-
-        <div class="simulator-container">
-          <div class="card">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-vial"></i> Test Input</h3>
-            </div>
-            <div class="card-body simulator-input-panel">
-              <div class="input-field-group">
-                <label>Test Filename</label>
-                <input type="text" class="input-field" id="sim-input-filename" placeholder="e.g. quarterly_report_2026.pdf, song.flac, movie.mkv" value="quarterly_report_2026.pdf">
-              </div>
-
-              <div class="input-field-group">
-                <label>Test Source Folder</label>
-                <input type="text" class="input-field" id="sim-input-folder" placeholder="C:\Users\Downloads" readonly>
-              </div>
-
-              <button class="btn-primary" id="btn-run-simulation" style="margin-top: 10px;">
-                <i class="fa-solid fa-play"></i> Simulate Path
-              </button>
-            </div>
-          </div>
-
-          <div class="card">
-            <div class="card-header">
-              <h3><i class="fa-solid fa-wand-magic"></i> Simulated Output Preview</h3>
-            </div>
-            <div class="card-body">
-              <div class="simulator-result-box" id="sim-result-box">
-                <div class="sim-result-row">
-                  <span class="sim-result-label">Detected Category:</span>
-                  <span class="sim-result-value" id="sim-category-badge">
-                    <span class="log-status-badge info">Documents</span>
-                  </span>
-                </div>
-
-                <div class="sim-result-row">
-                  <span class="sim-result-label">Detected Extension:</span>
-                  <span class="sim-result-value" id="sim-ext-badge">.pdf</span>
-                </div>
-
-                <div class="sim-result-row">
-                  <span class="sim-result-label">Target File Name:</span>
-                  <span class="sim-result-value" id="sim-target-filename">quarterly_report_2026.pdf</span>
-                </div>
-
-                <div class="input-field-group">
-                  <label>Full Destination Path:</label>
-                  <div class="sim-path-display" id="sim-full-path">
-                    C:\Users\Downloads\31 August 2026\Documents\pdf\quarterly_report_2026.pdf
-                  </div>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>

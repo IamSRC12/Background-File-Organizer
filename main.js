@@ -724,25 +724,6 @@ ipcMain.handle('trigger-manual-scan', async () => {
   return true;
 });
 
-ipcMain.handle('simulate-path', (event, filename, sampleFolder) => {
-  try {
-    const settings = settingsManager.getSettings();
-    const folder = sampleFolder || (settings.watchFolders && settings.watchFolders[0]) || path.join(os.homedir(), 'Downloads');
-    const fakePath = path.join(folder, filename);
-    const computed = computeDestination(fakePath, folder, settings);
-    return {
-      success: true,
-      category: computed.category,
-      extName: computed.extName,
-      targetDir: computed.targetDir,
-      targetFileName: computed.targetFileName,
-      fullTargetPath: path.join(computed.targetDir, computed.targetFileName)
-    };
-  } catch (e) {
-    return { success: false, error: e.message };
-  }
-});
-
 ipcMain.handle('open-tracker-file', () => {
   try {
     const documentsPath = app.getPath('documents');

@@ -33,6 +33,7 @@ const defaultColors = {
 
 // ─── Bootstrap ───────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', async () => {
+  initTheme();
   setupTabs();
   await loadSettings();
   await loadLogs();
@@ -54,6 +55,25 @@ document.addEventListener('DOMContentLoaded', async () => {
   updateWatcherStatusUI(watcherActive);
 });
 
+// ─── Theme ───────────────────────────────────────────────────────────────────
+function initTheme() {
+  const btn = document.getElementById('btn-theme-toggle');
+  if (!btn) return;
+  const icon = btn.querySelector('i');
+  const label = btn.querySelector('span');
+  const apply = (theme) => {
+    document.documentElement.dataset.theme = theme;
+    if (icon) icon.className = theme === 'light' ? 'fa-solid fa-sun' : 'fa-solid fa-moon';
+    if (label) label.textContent = theme === 'light' ? 'Dark theme' : 'Light theme';
+  };
+  apply(document.documentElement.dataset.theme || 'dark');
+  btn.addEventListener('click', () => {
+    const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+    apply(next);
+    try { localStorage.setItem('sortify-theme', next); } catch (e) {}
+  });
+}
+
 // ─── Tab Navigation ──────────────────────────────────────────────────────────
 function setupTabs() {
   const navItems = document.querySelectorAll('.nav-item');
@@ -68,10 +88,6 @@ function setupTabs() {
       tabContents.forEach(tab => {
         tab.id === tabId ? tab.classList.add('active') : tab.classList.remove('active');
       });
-
-      if (tabId === 'tab-simulator') {
-        runSimulation();
-      }
     });
   });
 }
@@ -120,13 +136,7 @@ async function loadSettings() {
   document.getElementById('toggle-lowercase-ext').checked = currentSettings.lowercaseExtensions !== false;
   document.getElementById('toggle-date-prefix').checked = !!currentSettings.autoDatePrefix;
 
-  // 3. Simulator source folder
-  const simFolder = document.getElementById('sim-input-folder');
-  if (simFolder) {
-    simFolder.value = (currentSettings.watchFolders && currentSettings.watchFolders[0]) || 'Downloads';
-  }
-
-  // 4. Render Rules & Stats
+  // 3. Render Rules & Stats
   renderCategoryCards();
   updateStats();
   renderDistributionBar();
@@ -486,25 +496,6 @@ async function flashButtonSuccess(btn, message) {
   }, 400);
 }
 
-// ─── Rule Simulator ──────────────────────────────────────────────────────────
-async function runSimulation() {
-  const filename = document.getElementById('sim-input-filename').value.trim() || 'sample_file.pdf';
-  const folder = (currentSettings.watchFolders && currentSettings.watchFolders[0]) || 'C:\\Users\\Downloads';
-  document.getElementById('sim-input-folder').value = folder;
-
-  const result = await ipcRenderer.invoke('simulate-path', filename, folder);
-  if (result && result.success) {
-    const meta = currentSettings.categoryMetadata[result.category] || {};
-    const colorClass = meta.color || defaultColors[result.category] || 'slate-gradient';
-
-    const catBadge = document.getElementById('sim-category-badge');
-    catBadge.innerHTML = `<span class="log-status-badge ${colorClass}" style="color:#fff;">${result.category}</span>`;
-    document.getElementById('sim-ext-badge').textContent = '.' + result.extName;
-    document.getElementById('sim-target-filename').textContent = result.targetFileName;
-    document.getElementById('sim-full-path').textContent = result.fullTargetPath;
-  }
-}
-
 // ─── Category Distribution Breakdown Bar ────────────────────────────────────
 function renderDistributionBar() {
   const barTrack = document.getElementById('dist-bar-track');
@@ -857,10 +848,6 @@ function setupEventListeners() {
   document.getElementById('btn-open-tracker').addEventListener('click', async () => {
     await ipcRenderer.invoke('open-tracker-file');
   });
-
-  // Run Simulation button
-  document.getElementById('btn-run-simulation').addEventListener('click', runSimulation);
-  document.getElementById('sim-input-filename').addEventListener('input', runSimulation);
 
   // Logs search
   document.getElementById('input-log-search').addEventListener('input', (e) => {
